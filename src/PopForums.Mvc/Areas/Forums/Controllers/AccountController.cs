@@ -72,9 +72,7 @@ namespace PopForums.Mvc.Areas.Forums.Controllers
 			SetupCreateData();
 			var signupData = new SignupData
 			{
-				IsDaylightSaving = true,
 				IsSubscribed = true,
-				TimeZone = _settingsManager.Current.ServerTimeZone
 			};
 			var loginState = _externalLoginTempService.Read();
 			if (loginState != null)

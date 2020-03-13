@@ -1,5 +1,6 @@
 ﻿using System;
 using Microsoft.AspNetCore.SignalR;
+using PopForums.Extensions;
 using PopForums.Messaging;
 using PopForums.Models;
 using PopForums.Repositories;
@@ -9,9 +10,8 @@ namespace PopForums.Mvc.Areas.Forums.Messaging
 {
     public class Broker : IBroker
 	{
-		public Broker(ITimeFormattingService timeFormattingService, IForumRepository forumRepo, IHubContext<TopicsHub> topicHubContext, IHubContext<FeedHub> feedHubContext, IHubContext<ForumsHub> forumsHubContext, IHubContext<RecentHub> recentHubContext, ITenantService tenantService)
+		public Broker(IForumRepository forumRepo, IHubContext<TopicsHub> topicHubContext, IHubContext<FeedHub> feedHubContext, IHubContext<ForumsHub> forumsHubContext, IHubContext<RecentHub> recentHubContext, ITenantService tenantService)
 		{
-			_timeFormattingService = timeFormattingService;
 			_forumRepo = forumRepo;
 			_topicHubContext = topicHubContext;
 			_feedHubContext = feedHubContext;
@@ -20,7 +20,6 @@ namespace PopForums.Mvc.Areas.Forums.Messaging
 			_tenantService = tenantService;
 		}
 
-		private readonly ITimeFormattingService _timeFormattingService;
 		private readonly IForumRepository _forumRepo;
 		private readonly IHubContext<TopicsHub> _topicHubContext;
 		private readonly IHubContext<FeedHub> _feedHubContext;
@@ -50,7 +49,7 @@ namespace PopForums.Mvc.Areas.Forums.Messaging
 		public void NotifyForumUpdate(Forum forum)
 		{
 			var tenant = _tenantService.GetTenant();
-			_forumsHubContext.Clients.Group($"{tenant}:all").SendAsync("notifyForumUpdate", new { forum.ForumID, TopicCount = forum.TopicCount.ToString("N0"), PostCount = forum.PostCount.ToString("N0"), LastPostTime = _timeFormattingService.GetFormattedTime(forum.LastPostTime, null), forum.LastPostName, Utc = forum.LastPostTime.ToString("o") });
+			_forumsHubContext.Clients.Group($"{tenant}:all").SendAsync("notifyForumUpdate", new { forum.ForumID, TopicCount = forum.TopicCount.ToString("N0"), PostCount = forum.PostCount.ToString("N0"), LastPostTime = forum.LastPostTime.AsUtc8601(), forum.LastPostName, Utc = forum.LastPostTime.ToString("o") });
 		}
 
 		public void NotifyTopicUpdate(Topic topic, Forum forum, string topicLink)
@@ -66,7 +65,7 @@ namespace PopForums.Mvc.Areas.Forums.Messaging
 				ForumTitle = forum.Title,
 				topic.ViewCount,
 				topic.ReplyCount,
-				LastPostTime = _timeFormattingService.GetFormattedTime(topic.LastPostTime, null),
+				LastPostTime = topic.LastPostTime.AsUtc8601(),
 				Utc = topic.LastPostTime.ToString("o"),
 				topic.LastPostName
 			};

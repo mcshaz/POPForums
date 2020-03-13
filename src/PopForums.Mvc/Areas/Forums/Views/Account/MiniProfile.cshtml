@@ -6,7 +6,7 @@
 }
 
 <div class="miniProfile">
-	@PopForums.Resources.Joined: @TimeFormattingService.GetFormattedTime(Model.Joined, profile)<br />
+	@PopForums.Resources.Joined: <span class="unformatted-time">@Model.Joined.AsUtc8601()</span><br />
 	@if (!String.IsNullOrWhiteSpace(Model.Location))
 	{
 		@PopForums.Resources.Location<text>: </text>@Model.Location<br />

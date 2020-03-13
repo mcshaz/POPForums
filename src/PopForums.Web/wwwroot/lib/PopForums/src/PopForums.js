@@ -614,7 +614,6 @@ PopForums.homeSetup = function () {
 		.then(function () {
 			return connection.invoke("listenToAll");
 		});
-	PopForums.startTimeUpdater();
 };
 
 PopForums.recentListen = function (pageSize) {
@@ -719,3 +718,4 @@ PopForums.startTimeUpdater = function () {
 		}
 	});
 };
+$(PopForums.startTimeUpdater);

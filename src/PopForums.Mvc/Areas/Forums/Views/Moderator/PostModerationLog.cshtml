@@ -9,7 +9,7 @@
 		@foreach (var entry in Model)
 		{
 			<tr>
-				<td>@TimeFormattingService.GetFormattedTime(entry.TimeStamp, profile)</td>
+				<td class="unformatted-time">@entry.TimeStamp.AsUtc8601()</td>
 				<td><a asp-controller="@AccountController.Name" asp-action="ViewProfile" asp-route-id="@entry.UserID" target="_blank">@entry.UserName</a></td>
 				<td>@entry.ModerationType</td>
 			</tr>

@@ -15,7 +15,7 @@
 		@foreach (var entry in Model)
 		{
 			<tr>
-				<td>@TimeFormattingService.GetFormattedTime(entry.TimeStamp, profile)</td>
+				<td class="unformatted-time">@entry.TimeStamp.AsUtc8601()</td>
 				@if (entry.UserID == 0)
 				{
 					<td>@entry.UserName</td>

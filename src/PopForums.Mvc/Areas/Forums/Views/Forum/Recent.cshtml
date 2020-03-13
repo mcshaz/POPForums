@@ -9,57 +9,56 @@
 }
 
 @section HeaderContent {
-	<script type="text/javascript" language="javascript">
-		$(function () {
-			PopForums.startTimeUpdater();
-		@if (Model.PagerContext.PageIndex == 1)
-		{
-			<text>PopForums.recentListen(@Model.PagerContext.PageSize);</text>
-		}
-		});
-	</script>
+	@if (Model.PagerContext.PageIndex == 1)
+	{
+		<script type="text/javascript" language="javascript">
+			$(function () {
+				<text>PopForums.recentListen(@Model.PagerContext.PageSize);</text>
+			});
+		</script>
+	}
 }
 
-<h1>@PopForums.Resources.Recent</h1>
+	<h1>@PopForums.Resources.Recent</h1>
 
-<ul id="TopBreadcrumb" class="breadcrumb sticky-top">
-	<li class="breadcrumb-item"><span class="glyphicon glyphicon-chevron-up"></span> <a asp-controller="@HomeController.Name" asp-action="Index">@PopForums.Resources.Forums</a></li>
-	<li class="breadcrumb-item active">@PopForums.Resources.Recent</li>
-</ul>
+	<ul id="TopBreadcrumb" class="breadcrumb sticky-top">
+		<li class="breadcrumb-item"><span class="glyphicon glyphicon-chevron-up"></span> <a asp-controller="@HomeController.Name" asp-action="Index">@PopForums.Resources.Forums</a></li>
+		<li class="breadcrumb-item active">@PopForums.Resources.Recent</li>
+	</ul>
 
-<pf-pagerLinks controllerName="Forum" actionName="Recent" pagerContext="@Model.PagerContext" class="pagination pagination-sm pagerLinks" moreTextClass="morePager" currentTextClass="currentPager active" />
+	<pf-pagerLinks controllerName="Forum" actionName="Recent" pagerContext="@Model.PagerContext" class="pagination pagination-sm pagerLinks" moreTextClass="morePager" currentTextClass="currentPager active" />
 
-<table id="TopicList" class="table mt-3 table-hover">
-	@foreach (var topic in Model.Topics)
-	{
-		<tr @if (topic.IsDeleted) { <text> class="bg-warning" </text>  } data-topicid="@topic.TopicID">
+	<table id="TopicList" class="table mt-3 table-hover">
+		@foreach (var topic in Model.Topics)
+		{
+			<tr @if (topic.IsDeleted) { <text> class="bg-warning" </text> 				} data-topicid="@topic.TopicID">
+				<td class="newIndicator">
+					@if (user == null)
+					{
+						<a asp-controller="Forum" asp-action="Topic" asp-route-id="@topic.UrlName"><pf-topicReadIndicator topic="@topic" pagedTopicContainer="@Model" /></a>
+					}
+					else
+					{
+						<a asp-controller="@ForumController.Name" asp-action="GoToNewestPost" asp-route-id="@topic.TopicID"><pf-topicReadIndicator topic="@topic" pagedTopicContainer="@Model" /></a>
+					}
+				</td>
+				<td>
+					<h2>@Html.ActionLink(topic.Title, "Topic", "Forum", new { id = topic.UrlName, pageNumber = 1 }, null)</h2>
+					<small class="float-right d-none d-sm-block">
+						@PopForums.Resources.StartedBy: @topic.StartedByName @PopForums.Resources.In @Model.ForumTitles[topic.ForumID] | @PopForums.Resources.Views: @topic.ViewCount | @PopForums.Resources.Replies: @topic.ReplyCount | @PopForums.Resources.Last: <span class="lastPostTime fTime">@topic.LastPostTime.AsUtc8601()</span> @PopForums.Resources.By @topic.LastPostName
+					</small>
+				</td>
+			</tr>
+		}
+		<tr id="TopicTemplate" data-topicid="" class="hidden">
 			<td class="newIndicator">
-				@if (user == null)
-				{
-					<a asp-controller="Forum" asp-action="Topic" asp-route-id="@topic.UrlName"><pf-topicReadIndicator topic="@topic" pagedTopicContainer="@Model" /></a>
-				}
-				else
-				{
-					<a asp-controller="@ForumController.Name" asp-action="GoToNewestPost" asp-route-id="@topic.TopicID"><pf-topicReadIndicator topic="@topic" pagedTopicContainer="@Model" /></a>
-				}
+				<a href=""><span class="topicIndicator icon-file-text2 text-warning"></span></a>
 			</td>
 			<td>
-				<h2>@Html.ActionLink(topic.Title, "Topic", "Forum", new { id = topic.UrlName, pageNumber = 1 }, null)</h2>
+				<h2><a class="titleLink" href=""></a></h2>
 				<small class="float-right d-none d-sm-block">
-					@PopForums.Resources.StartedBy: @topic.StartedByName @PopForums.Resources.In @Model.ForumTitles[topic.ForumID] | @PopForums.Resources.Views: @topic.ViewCount | @PopForums.Resources.Replies: @topic.ReplyCount | @PopForums.Resources.Last: <span class="lastPostTime fTime">@topic.LastPostTime.AsUtc8601()</span> @PopForums.Resources.By @topic.LastPostName
+					@PopForums.Resources.StartedBy: <span class="startedByName"></span> @PopForums.Resources.In <span class="forumTitle"></span> | @PopForums.Resources.Views: <span class="viewCount"></span> | @PopForums.Resources.Replies: <span class="replyCount"></span> | @PopForums.Resources.Last: <span class="lastPostTime fTime" data-utc=""></span> @PopForums.Resources.By <span class="lastPostName"></span>
 				</small>
 			</td>
 		</tr>
-	}
-	<tr id="TopicTemplate" data-topicid="" class="hidden">
-		<td class="newIndicator">
-			<a href=""><span class="topicIndicator icon-file-text2 text-warning"></span></a>
-		</td>
-		<td>
-			<h2><a class="titleLink" href=""></a></h2>
-			<small class="float-right d-none d-sm-block">
-				@PopForums.Resources.StartedBy: <span class="startedByName"></span> @PopForums.Resources.In <span class="forumTitle"></span> | @PopForums.Resources.Views: <span class="viewCount"></span> | @PopForums.Resources.Replies: <span class="replyCount"></span> | @PopForums.Resources.Last: <span class="lastPostTime fTime" data-utc=""></span> @PopForums.Resources.By <span class="lastPostName"></span>
-			</small>
-		</td>
-	</tr>
-</table>
+	</table>
