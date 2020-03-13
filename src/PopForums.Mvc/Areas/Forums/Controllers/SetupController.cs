@@ -28,8 +28,6 @@ namespace PopForums.Mvc.Areas.Forums.Controllers
 			var setupVariables = new SetupVariables
 			{
 				SmtpPort = 25,
-				ServerDaylightSaving = true,
-				ServerTimeZone = -5
 			};
 			return View(setupVariables);
 		}
