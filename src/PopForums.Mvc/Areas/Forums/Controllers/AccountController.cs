@@ -45,7 +45,6 @@ namespace PopForums.Mvc.Areas.Forums.Controllers
 		public static string Name = "Account";
 		public static string CoppaDateKey = "CoppaDateKey";
 		public static string TosKey = "TosKey";
-		public static string ServerTimeZoneKey = "ServerTimeZoneKey";
 
 		private readonly IUserService _userService;
 		private readonly ISettingsManager _settingsManager;
@@ -87,7 +86,6 @@ namespace PopForums.Mvc.Areas.Forums.Controllers
 		{
 			ViewData[CoppaDateKey] = SignupData.GetCoppaDate();
 			ViewData[TosKey] = _settingsManager.Current.TermsOfService;
-			ViewData[ServerTimeZoneKey] = _settingsManager.Current.ServerTimeZone;
 		}
 		
 		[HttpPost]
