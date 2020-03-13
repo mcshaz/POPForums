@@ -1,9 +1,11 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace PopForums.Models
 {
 	public class DataCollections
 	{
+		[Obsolete]
 		public static Dictionary<int, string> TimeZones()
 		{
 			var timeZones = new Dictionary<int, string>();

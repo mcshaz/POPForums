@@ -18,8 +18,6 @@ namespace PopForums.Models
 			Instagram = profile.Instagram;
 			Facebook = profile.Facebook;
 			Twitter = profile.Twitter;
-			TimeZone = profile.TimeZone;
-			IsDaylightSaving = profile.IsDaylightSaving;
 			HideVanity = profile.HideVanity;
 		}
 
@@ -33,8 +31,6 @@ namespace PopForums.Models
 		public string Instagram { get; set; }
 		public string Facebook { get; set; }
 		public string Twitter { get; set; }
-		public int TimeZone { get; set; }
-		public bool IsDaylightSaving { get; set; }
 		public bool HideVanity { get; set; }
 	}
 }

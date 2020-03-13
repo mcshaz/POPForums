@@ -65,8 +65,6 @@ namespace PopForums.Services
 			var profile = new Profile
             {
 				UserID = user.UserID,
-	            TimeZone = signupData.TimeZone,
-	            IsDaylightSaving = signupData.IsDaylightSaving,
 	            IsSubscribed = signupData.IsSubscribed,
 	            IsTos = signupData.IsTos
             };
