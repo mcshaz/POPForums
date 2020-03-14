@@ -40,6 +40,7 @@ class BrowserDateTimeCulture {
 				hour: 'numeric',
 				minute: 'numeric',
 			})).format;
+
 		this._translate = timesTranslated[pageLanguage];
 	}
 	getLocaleDateTime(dt) {

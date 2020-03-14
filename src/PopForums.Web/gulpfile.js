@@ -1,4 +1,4 @@
-﻿/// <binding AfterBuild="default" />
+/// <binding AfterBuild="default" />
 const babel = require('gulp-babel');
 const bump = require('gulp-bump');
 const concat = require('gulp-concat');
