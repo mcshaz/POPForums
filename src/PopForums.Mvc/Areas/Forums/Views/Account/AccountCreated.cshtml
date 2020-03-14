@@ -10,6 +10,12 @@
 	</ul>
 </div>
 
-<p class="alert alert-danger">@ViewData["EmailProblem"] @ViewData["Result"]</p>
-
+@if (ViewData["EmailProblem"] == null)
+{
+	<p class="alert alert-info">@ViewData["Result"]</p>
+}
+else
+{
+	<p class="alert alert-danger">@ViewData["EmailProblem"] @ViewData["Result"]</p>
+}
 <p><a asp-action="EditProfile">@PopForums.Resources.EditYourProfile</a></p>
