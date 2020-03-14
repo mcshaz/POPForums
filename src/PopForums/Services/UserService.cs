@@ -89,6 +89,8 @@ namespace PopForums.Services
 
 		public async Task SetPassword(User targetUser, string password, string ip, User user)
 		{
+			// as the primary reason for salts I am aware of, is to prevent rainbow table guessing of passwords
+			// if ever a database is compromised, we can safely use the more performant Guid & feel happy about the millisecond(s) saved
 			var salt = Guid.NewGuid();
 			var hashedPassword = password.GetSHA256Hash(salt);
 			await _userRepository.SetHashedPassword(targetUser, hashedPassword, salt);
@@ -225,7 +227,7 @@ namespace PopForums.Services
 			if (await IsEmailBanned(email))
 				throw new Exception($"The e-mail {email} is banned.");
 			var creationDate = DateTime.UtcNow;
-			var authorizationKey = Guid.NewGuid();
+			var authorizationKey = Crypto.NewGuid();
 			var salt = Guid.NewGuid();
 			var hashedPassword = password.GetSHA256Hash(salt);
 			var user = await _userRepository.CreateUser(name, email, creationDate, isApproved, hashedPassword, authorizationKey, salt);
@@ -348,7 +350,7 @@ namespace PopForums.Services
 			var targetUser = await _userRepository.GetUserByAuthorizationKey(key);
 			if (targetUser == null)
 				return null;
-			var newKey = Guid.NewGuid();
+			var newKey = Crypto.NewGuid();
 			await UpdateAuthorizationKey(targetUser, newKey);
 			await UpdateIsApproved(targetUser, true, null, ip);
 			targetUser.AuthorizationKey = newKey;
@@ -508,7 +510,7 @@ namespace PopForums.Services
 		{
 			if (user == null)
 				throw new ArgumentNullException("user");
-			var newAuth = Guid.NewGuid();
+			var newAuth = Crypto.NewGuid();
 			await UpdateAuthorizationKey(user, newAuth);
 			user.AuthorizationKey = newAuth;
 			var link = resetLink + "/" + newAuth;
@@ -518,7 +520,7 @@ namespace PopForums.Services
 		public async Task ResetPassword(User user, string newPassword, string ip)
 		{
 			await SetPassword(user, newPassword, ip, null);
-			await UpdateAuthorizationKey(user, Guid.NewGuid());
+			await UpdateAuthorizationKey(user, Crypto.NewGuid());
 			await Login(user, ip);
 		}
 
@@ -530,6 +532,16 @@ namespace PopForums.Services
 		public Dictionary<User, int> GetUsersByPointTotals(int top)
 		{
 			return _userRepository.GetUsersByPointTotals(top);
+		}
+
+		private static class Crypto
+		{
+			private static System.Security.Cryptography.RNGCryptoServiceProvider rngCsp = new System.Security.Cryptography.RNGCryptoServiceProvider();
+			public static Guid NewGuid() {
+				var returnVar = new Byte[16];
+				rngCsp.GetBytes(returnVar);
+				return new Guid(returnVar);
+			}
 		}
 	}
 }
